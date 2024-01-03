@@ -1,5 +1,7 @@
 import requests
 from datetime import datetime
+import time
+import smtplib
 
 MY_LAT = "Your Lattitude as float"
 MY_LONG = "Your Longitude as float"
@@ -32,3 +34,17 @@ def is_dark():
     hour=time_now.hour
     if sunset<=hour<=sunrise:
         return True
+    
+while True:
+    time.sleep(60)
+    #Send mail only when the sky is dark and if the iss is near your location
+    if is_dark() and is_iss_overhead():
+        my_email="YOUR EMAIL HERE"
+        password="YOUR APP PASSWORD"
+        #Gmail: smtp.gmail.com , Hotmail: smtp.live.com, Outlook: outlook.office365.com, Yahoo: smtp.mail.yahoo.com
+        smtp_address="SMTP ADDRESS AS ABOVE"
+
+        with smtplib.SMTP(smtp_address) as connection:
+            connection.starttls()
+            connection.login(my_email,password)
+            connection.sendmail(from_addr=my_email,to_addrs="RECEIVER ADDRESS",msg="Subject:Look up.\n\nThe ISS Satellite is above you in the sky.") 
